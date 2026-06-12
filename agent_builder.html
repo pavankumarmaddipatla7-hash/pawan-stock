@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAgent Builder - Create Your Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --secondary: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* Checkbox Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-card:hover {
+            border-color: var(--secondary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-card input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .btn-add {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        /* Agents Grid */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .agent-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .agent-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .agent-role {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .agent-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Agent Builder</h1>
+        <p class="subtitle">Create and add custom agents to your team with specific options</p>
+    </header>
+
+    <div class="layout">
+        <!-- Builder Panel -->
+        <div class="panel">
+            <h2 class="panel-title">🛠️ Create Custom Agent</h2>
+            
+            <div class="form-group">
+                <label for="agentName">Agent Name</label>
+                <input type="text" id="agentName" placeholder="e.g., Data Miner Pro">
+            </div>
+
+            <div class="form-group">
+                <label for="agentIcon">Select Icon</label>
+                <select id="agentIcon">
+                    <option value="🤖">🤖 Robot</option>
+                    <option value="🕷️">🕷️ Spider (Scraper)</option>
+                    <option value="📊">📊 Data Chart</option>
+                    <option value="🕵️">🕵️ Detective (Research)</option>
+                    <option value="💻">💻 Code Terminal</option>
+                    <option value="🎨">🎨 Artist Palette</option>
+                    <option value="⚙️">⚙️ Gears</option>
+                    <option value="🧠">🧠 Brain</option>
+                    <option value="⚡">⚡ Lightning (Speed)</option>
+                    <option value="🛒">🛒 Shopping Cart</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="agentRole">Specialty / Role (More Options!)</label>
+                <select id="agentRole">
+                    <optgroup label="Data & Research">
+                        <option value="Web Scraper">Web Scraper</option>
+                        <option value="Data Extractor">Data Extractor</option>
+                        <option value="Market Researcher">Market Researcher</option>
+                    </optgroup>
+                    <optgroup label="Development">
+                        <option value="Python Developer">Python Developer</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Database Admin">Database Admin</option>
+                    </optgroup>
+                    <optgroup label="Marketing & Sales">
+                        <option value="Social Media Bot">Social Media Bot</option>
+                        <option value="SEO Specialist">SEO Specialist</option>
+                        <option value="Email Marketer">Email Marketer</option>
+                    </optgroup>
+                    <optgroup label="Personal Assistant">
+                        <option value="Task Scheduler">Task Scheduler</option>
+                        <option value="File Organizer">File Organizer</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Agent Capabilities (Check all that apply)</label>
+                <div class="options-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Bypass CAPTCHA" class="capability-checkbox"> Bypass CAPTCHA
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Download Files" class="capability-checkbox"> Download Files
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Read Screenshots" class="capability-checkbox"> Read Screenshots
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Execute Code" class="capability-checkbox"> Execute Code
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Save to CSV" class="capability-checkbox" checked> Save to CSV
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" value="Send Emails" class="capability-checkbox"> Send Emails
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="agentPrompt">Specific Instructions</label>
+                <textarea id="agentPrompt" placeholder="What specifically do you want this agent to do? e.g., 'Always extract prices in USD and save to a spreadsheet.'"></textarea>
+            </div>
+
+            <button class="btn-add" onclick="addAgent()">+ Add Agent to My Team</button>
+        </div>
+
+        <!-- My Agents Panel -->
+        <div class="panel">
+            <h2 class="panel-title">👥 My Active Agents</h2>
+            <div class="agents-grid" id="agentsGrid">
+                <!-- Empty state initially -->
+                <div class="empty-state" id="emptyState">
+                    <h3>No agents added yet.</h3>
+                    <p style="margin-top: 0.5rem;">Use the builder on the left to create and add agents to your team!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let agentIdCounter = 0;
+
+        function addAgent() {
+            const nameInput = document.getElementById('agentName');
+            const iconSelect = document.getElementById('agentIcon');
+            const roleSelect = document.getElementById('agentRole');
+            const promptInput = document.getElementById('agentPrompt');
+            const checkboxes = document.querySelectorAll('.capability-checkbox:checked');
+
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert("Please give your agent a name!");
+                return;
+            }
+
+            const capabilities = Array.from(checkboxes).map(cb => cb.value);
+
+            // Create Agent Card UI
+            const grid = document.getElementById('agentsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+            card.id = `agent-${agentIdCounter}`;
+
+            let tagsHtml = capabilities.map(cap => `<span class="tag">${cap}</span>`).join('');
+            if(tagsHtml === '') tagsHtml = `<span class="tag">Basic Operations</span>`;
+
+            card.innerHTML = `
+                <button class="delete-btn" onclick="deleteAgent('agent-${agentIdCounter}')">✕</button>
+                <div class="agent-icon">${iconSelect.value}</div>
+                <div class="agent-name">${name}</div>
+                <div class="agent-role">${roleSelect.value}</div>
+                <div class="agent-tags">
+                    ${tagsHtml}
+                </div>
+                <div style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-top: 10px;">
+                    "${promptInput.value || 'No specific instructions provided.'}"
+                </div>
+            `;
+
+            grid.appendChild(card);
+
+            // Reset specific fields
+            nameInput.value = '';
+            promptInput.value = '';
+            agentIdCounter++;
+        }
+
+        function deleteAgent(id) {
+            const card = document.getElementById(id);
+            if (card) {
+                card.remove();
+            }
+
+            const grid = document.getElementById('agentsGrid');
+            if (grid.children.length === 1) { // 1 because emptyState is hidden but still there
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
